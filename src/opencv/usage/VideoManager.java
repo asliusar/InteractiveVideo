@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.text.Position.Bias;
 
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.MediaListenerAdapter;
@@ -17,18 +18,14 @@ import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 
 
-
 public class VideoManager {
 	
-	private static final String inputFilename = "/home/andrey/Videos/SpaceBrothers-32.avi";
-	private static final String outputFilename = "/home/andrey/Videos/Space Brothers-32.flv";
-	private static final String imageFilename = "c:/jcg_logo_small.png";
-	
-	
+	private static String inputFilename = "/home/andrey/Videos/SpaceBrothers-32.avi";
+	private static String outputFilePrefix = "/home/andrey/Videos/Snapshots/";
+	private static BufferedImage bufferedImage;
     
-    public static final double SECONDS_BETWEEN_FRAMES = 3/GetVideoFrames(inputFilename);
+    public static double SECONDS_BETWEEN_FRAMES ;
     
-    private static final String outputFilePrefix = "/home/andrey/Videos/Snapshots/";
     
     // The video stream index, used to ensure we display frames from one and
     // only one video stream from the media container.
@@ -37,12 +34,17 @@ public class VideoManager {
     // Time of last frame write
     private static long mLastPtsWrite = Global.NO_PTS;
     
-    public static final long MICRO_SECONDS_BETWEEN_FRAMES = 
-        (long)(Global.DEFAULT_PTS_PER_SECOND * SECONDS_BETWEEN_FRAMES);
+    public static  long MICRO_SECONDS_BETWEEN_FRAMES;
 
+    public VideoManager(String inputFilename, String outputFilePrefix){
+    	this.inputFilename = inputFilename;
+    	this.outputFilePrefix = outputFilePrefix;
+    	SECONDS_BETWEEN_FRAMES = 3/GetVideoFrames(inputFilename);
+    	MICRO_SECONDS_BETWEEN_FRAMES = 
+    	        (long)(Global.DEFAULT_PTS_PER_SECOND * SECONDS_BETWEEN_FRAMES);
+    }
     
-    
-    public static void main(String[] args) {
+    public BufferedImage SplitVideo(){
 
     	GetVideoFrames(inputFilename);
     	
@@ -50,14 +52,18 @@ public class VideoManager {
 
         // stipulate that we want BufferedImages created in BGR 24bit color space
         mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-        
-        mediaReader.addListener(new ImageSnapListener());
-
+        ImageSnapListener imageSnapListener = new ImageSnapListener();
+        mediaReader.addListener(imageSnapListener);
         // read out the contents of the media file and
         // dispatch events to the attached listener
+        	
+        	
+        while (mediaReader.readPacket() == null){
+        	if(bufferedImage != null)
+        		bufferedImage = imageSnapListener.bufferedImage;	
+        }
         
-        while (mediaReader.readPacket() == null) ;
-
+        return bufferedImage;
     }
 
     public static double GetVideoFrames(String inputFileName) {
@@ -71,6 +77,8 @@ public class VideoManager {
     
     private static class ImageSnapListener extends MediaListenerAdapter {
 
+    	public BufferedImage bufferedImage;
+    	
         public void onVideoPicture(IVideoPictureEvent event) {
 
             if (event.getStreamIndex() != mVideoStreamIndex) {
@@ -90,9 +98,10 @@ public class VideoManager {
             // if it's time to write the next frame
             if (event.getTimeStamp() - mLastPtsWrite >= 
                     MICRO_SECONDS_BETWEEN_FRAMES) {
-                                
+                
+            bufferedImage = event.getImage();
                 String outputFilename = dumpImageToFile(event.getImage());
-
+                
                 // indicate file written
                 double seconds = ((double) event.getTimeStamp()) / 
                     Global.DEFAULT_PTS_PER_SECOND;
@@ -103,7 +112,7 @@ public class VideoManager {
                 // update last write time
                 mLastPtsWrite += MICRO_SECONDS_BETWEEN_FRAMES;
             }
-
+            //return event.getImage();
         }
         
         private String dumpImageToFile(BufferedImage image) {

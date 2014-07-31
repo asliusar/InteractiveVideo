@@ -7,5 +7,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV-2.4.9"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SLF4J"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Xuggler"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XugglerLib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenOpenOpenCV"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
