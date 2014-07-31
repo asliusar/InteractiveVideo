@@ -34,7 +34,7 @@ public class FaceDetector {
     public static void main(String[] args) throws IOException {
  
     	//URL url = FaceDetector.class.getResource("/home/andrey/workspace/OpencvTest/bin/combine_images.jpg");
-    	File img = new File("/home/andrey/workspace/OpencvTest/bin/combine_images.jpg");
+    	File img = new File("/home/andrey/Videos/Snapshots/1406799339075.png");
     	bufferedImage = ImageIO.read(img);
     	
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
