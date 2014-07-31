@@ -4,6 +4,6 @@ OpenCV - https://www.openshift.com/blogs/day-12-opencv-face-detection-for-java-d
 Xuggler - http://xuggle.googlecode.com/svn/trunk/repo/share/java/xuggle/xuggle-xuggler/5.4/
 
 SLF4J - http://www.slf4j.org/download.html
-Add slf4j-simple-1.6.1.jar and slf4j-api-1.6.1.jar.
+Add slf4j-simple-1.7.7.jar and slf4j-api-1.7.7.jar.
 
  
