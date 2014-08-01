@@ -26,33 +26,72 @@ import org.opencv.highgui.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.*;
 
+import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
 
 
-public class FaceClassifier {
+
+public class FaceClassifier extends Thread{
 	//private static String imagename = "images.jpg";
 	private static String abs_path = "/home/sasha/workspace/FaceDetection/bin/"; // dynamically change
 	public int global_faces  = 0;
+	private List<Rect> rectFaces;
+	private List<BufferedImage> cropFaces;
+	Mat processingImg;
+	BufferedImage processingImgBuf;
+	@Override
+	public void run(){
+		try {
+			rectFaces = findFace(processingImg);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+	}
 	
-	public static void main(String[] args)
-	{}
+	public List<Rect> getRectFaces()
+	{
+		if(rectFaces == null)
+		{
+			rectFaces = new ArrayList<Rect>();
+		}
+		return rectFaces;
+	}
 	
-    public MatOfRect findFace(String imagename) throws IOException{
+	public FaceClassifier() {
+		System.out.println("lol");
+	}
+	public FaceClassifier(BufferedImage bufferedImage){
+		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        CascadeClassifier testClass = new CascadeClassifier(FaceClassifier.class.
+        		getResource("haarcascade_frontalface_alt.xml").getPath());
+        processingImg = new Mat(bufferedImage.getHeight(),bufferedImage.getWidth(), CvType.CV_8UC3);
+        processingImg.put(0, 0, pixels);
+        
+        
+	}
+	
+	public List<Rect> findFace(Mat image) throws IOException{
     	
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         System.out.println("\nRunning Main");
 
         CascadeClassifier Main = new CascadeClassifier(
         		FaceClassifier.class.getResource("haarcascades/haarcascade_frontalface_default.xml").getPath());
-        Mat image = Highgui.imread(FaceClassifier.class.getResource(imagename).getPath());
-        BufferedImage in = javax.imageio.ImageIO.read(new File(abs_path+imagename));
         MatOfRect eyeDetections = new MatOfRect(),faceDetections = new MatOfRect(),faceDetections2 = new MatOfRect();
         MatOfRect mouthDetections = new MatOfRect();
-//        Main.detectMultiScale(image, faceDetections);
         faceDetections = findAllFaces(Main,image);
          
         global_faces+=faceDetections.toArray().length;
         int i = 0;
+        
+        cropFaces = new ArrayList<BufferedImage>();
         for(Rect r: faceDetections.toArray())
+        {
+        	 BufferedImage croppedTemp = processingImgBuf.getSubimage(r.x,r.y,r.width,r.height);
+        	 cropFaces.add(croppedTemp);
+        }
+        /*for(Rect r: faceDetections.toArray())
         {
         	Core.rectangle(image, new Point(r.x, r.y),
         			new Point(r.x + r.width, r.y + r.height), new Scalar(255, 45, 34));	     
@@ -83,17 +122,22 @@ public class FaceClassifier {
 	        
 	        String filename = "output"+i+".png";
 	        System.out.println(String.format("Writing %s", filename));
-	       // Highgui.imwrite(filename, cropped);
+	        Highgui.imwrite(filename, cropped);
 	        i++;
-        }
+        }*/
+        
        // Highgui.imwrite("ans.png", image);
+        
+        List<Rect> ansArrayList = new ArrayList<Rect>(faceDetections.toList());
+        
         System.out.println("Finished");
-		return faceDetections;
+		return ansArrayList;
     }
-    
+
     private CascadeClassifier reloadXml(String name)
     {
-    	CascadeClassifier classifier =  new CascadeClassifier(FaceClassifier.class.getResource("haarcascades/"+name+".xml").getPath());
+    	CascadeClassifier classifier =  new CascadeClassifier(FaceClassifier.class.
+    			getResource("haarcascades/"+name+".xml").getPath());
     	return classifier;
     }
     
@@ -128,6 +172,13 @@ public class FaceClassifier {
             System.out.println(String.format("%s faces detected",faceDetections.toArray().length));
     	}
     	return faceDetections;
+    }
+    
+    public List<BufferedImage> getCropFaces()
+    {
+    	if(cropFaces==null)
+    		cropFaces = new ArrayList<BufferedImage>();
+    	return cropFaces;
     }
     
     private MatOfRect merge(MatOfRect a,MatOfRect b)

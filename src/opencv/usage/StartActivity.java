@@ -7,7 +7,7 @@ public class StartActivity {
 		//while()
 		VideoManager videoManager = new VideoManager("/home/andrey/Videos/SpaceBrothers-32.avi", 
 				"/home/andrey/Videos/Snapshots/");
-		videoManager.SplitVideo();
+		//videoManager.SplitVideo();
 		
 		
 	}
