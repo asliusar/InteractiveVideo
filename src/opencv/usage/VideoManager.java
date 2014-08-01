@@ -18,12 +18,14 @@ import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 
 
-public class VideoManager {
+public class VideoManager extends Thread{
 	
-	private static String inputFilename = "/home/andrey/Videos/SpaceBrothers-32.avi";
-	private static String outputFilePrefix = "/home/andrey/Videos/Snapshots/";
-	private static BufferedImage bufferedImage;
-    //kto-to rak
+	private static String inputFilename;
+	private static String outputFilePrefix;
+	public static BufferedImage bufferedImage;
+	
+	
+	public IMediaReader mediaReader;
     public static double SECONDS_BETWEEN_FRAMES ;
     
     
@@ -37,34 +39,43 @@ public class VideoManager {
     public static  long MICRO_SECONDS_BETWEEN_FRAMES;
 
     public VideoManager(String inputFilename, String outputFilePrefix){
+    	setDaemon(true);
+    	
     	this.inputFilename = inputFilename;
     	this.outputFilePrefix = outputFilePrefix;
+    	
     	SECONDS_BETWEEN_FRAMES = 3/GetVideoFrames(inputFilename);
     	MICRO_SECONDS_BETWEEN_FRAMES = 
     	        (long)(Global.DEFAULT_PTS_PER_SECOND * SECONDS_BETWEEN_FRAMES);
-    }
-    
-    public BufferedImage SplitVideo(){
-
-    	GetVideoFrames(inputFilename);
+    	mediaReader = ToolFactory.makeReader(inputFilename);
     	
-        IMediaReader mediaReader = ToolFactory.makeReader(inputFilename);
+    	GetVideoFrames(inputFilename);
 
         // stipulate that we want BufferedImages created in BGR 24bit color space
         mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-        ImageSnapListener imageSnapListener = new ImageSnapListener();
-        mediaReader.addListener(imageSnapListener);
+      
+       
+    }
+    
+    @Override
+    public void run(){
+    	
         // read out the contents of the media file and
         // dispatch events to the attached listener
-        	
-        	
+        ImageSnapListener imageSnapListener = new ImageSnapListener();
+        mediaReader.addListener(imageSnapListener);
         while (mediaReader.readPacket() == null){
-        	if(bufferedImage != null)
-        		bufferedImage = imageSnapListener.bufferedImage;	
+        	if(imageSnapListener.bufferedImage != null){
+        		bufferedImage = imageSnapListener.bufferedImage;
+        		break;
+        	}
         }
+        mediaReader.removeListener(imageSnapListener);
         
-        return bufferedImage;
+       // return bufferedImage;
     }
+    
+  
 
     public static double GetVideoFrames(String inputFileName) {
     	IContainer container = IContainer.make();
@@ -77,7 +88,7 @@ public class VideoManager {
     
     private static class ImageSnapListener extends MediaListenerAdapter {
 
-    	public BufferedImage bufferedImage;
+    	public BufferedImage bufferedImage = null;
     	
         public void onVideoPicture(IVideoPictureEvent event) {
 
@@ -131,3 +142,5 @@ public class VideoManager {
     }
 
 }
+
+

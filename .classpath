@@ -7,6 +7,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xuggler"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/openCV"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XugglerLib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenOpenOpenCV"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XugglerLib"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenOpenOpenCV"/>
 	<classpathentry kind="output" path="bin"/>
