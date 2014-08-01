@@ -16,7 +16,7 @@ public class MarkupManager extends Thread {
 		this.faceLinkList = faceLinkList;
 		this.secondOfSnapShot = secondOfSnapShot;
 		
-		setDaemon(true);
+		//setDaemon(true);
 		sleep(1000);
 		System.out.println("1");
 	}

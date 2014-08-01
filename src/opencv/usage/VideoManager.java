@@ -22,7 +22,7 @@ public class VideoManager extends Thread{
 	
 	private static String inputFilename;
 	private static String outputFilePrefix;
-	public static BufferedImage bufferedImage;
+	public BufferedImage bufferedImage;
 	
 	
 	public IMediaReader mediaReader;
@@ -39,6 +39,7 @@ public class VideoManager extends Thread{
     public static  long MICRO_SECONDS_BETWEEN_FRAMES;
 
     public VideoManager(String inputFilename, String outputFilePrefix){
+    	
     	setDaemon(true);
     	
     	this.inputFilename = inputFilename;

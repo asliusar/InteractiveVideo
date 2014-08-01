@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>ress</name>
+			<value>file:/home/dima/Work/Prog/workspace/InteractiveVideo/res</value>
+		</variable>
+	</variableList>
 </projectDescription>

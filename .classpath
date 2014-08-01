@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-cli-1.2"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-lang3-3.3.2"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xuggler"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/openCV"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xuggler"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SLF4j-a"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SLF4j-s"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

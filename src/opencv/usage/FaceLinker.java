@@ -1,5 +1,6 @@
 package opencv.usage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FaceLinker extends Thread{
@@ -9,6 +10,7 @@ public class FaceLinker extends Thread{
 	
 	public FaceLinker(List<String> faceNames){
 		this.faceNames = faceNames;
+		faceLinks = new ArrayList<String>();
 		faceLinks.add("qwe");
 		faceLinks.add("rty");
 	}
