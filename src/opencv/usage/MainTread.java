@@ -10,17 +10,22 @@ public class MainTread {
 				
 		// the end of video
 		while(videoManager.mediaReader.isOpen() == true){
-			videoManager.run();
-			
+					
 			FaceClassifier faceClassifier = new FaceClassifier(videoManager.bufferedImage);
 				faceClassifier.run();
 				
+			videoManager.run();	
+			
+			faceClassifier.join();
+				
 			FaceComparator faceComparator = new FaceComparator(faceClassifier.getCropFaces());
-				
+				faceComparator.run();
+			
 			FaceLinker faceLinker = new FaceLinker(faceComparator.getActorsNames());
-				
+				faceLinker.run();	
+			
 			MarkupManager markupManager = new MarkupManager(faceClassifier.getRectFaces(),faceLinker.GetLinks(), 10);
-				markupManager.start();
+				markupManager.run();
 		}
 		
 	}

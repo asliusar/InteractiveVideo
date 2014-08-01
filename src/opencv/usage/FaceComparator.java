@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaceComparator extends Thread{
+public class FaceComparator {
 
 	private List<BufferedImage> bufferedImages;
 	private List<String> actorsName;
@@ -18,12 +18,6 @@ public class FaceComparator extends Thread{
 	}
 	
 	public void run(){
-		try {
-			sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		System.out.println("compare is done!");
 	}
 	

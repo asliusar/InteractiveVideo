@@ -42,9 +42,11 @@ public class FaceClassifier extends Thread{
 	public void run(){
 		try {
 			rectFaces = findFace(processingImg);
+			Thread.yield();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 				
 	}

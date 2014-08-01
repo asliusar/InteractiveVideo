@@ -6,7 +6,7 @@ import org.opencv.core.Rect;
 
 import com.sun.swing.internal.plaf.basic.resources.basic;
 
-public class MarkupManager extends Thread {
+public class MarkupManager {
 	List<Rect> rectList;
 	List<String> faceLinkList;
 	double secondOfSnapShot;
@@ -17,20 +17,13 @@ public class MarkupManager extends Thread {
 		this.secondOfSnapShot = secondOfSnapShot;
 		
 		//setDaemon(true);
-		sleep(1000);
 		System.out.println("1");
 	}
 	
 	public void run(){
-		try {
-			sleep(500);
-			boolean b =  isDaemon();
-			System.out.println("2 = " + b);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		System.out.print("Murk is done");
 			
-		}
+		
 		
 	}
 }

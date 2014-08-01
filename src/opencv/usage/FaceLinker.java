@@ -3,7 +3,7 @@ package opencv.usage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaceLinker extends Thread{
+public class FaceLinker {
 
 	private List<String> faceNames;
 	private List<String> faceLinks;
@@ -15,14 +15,8 @@ public class FaceLinker extends Thread{
 		faceLinks.add("rty");
 	}
 	
-	@Override
 	public void run(){
-		try {
-			sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		System.out.println("links are done!");
 	}
 	
