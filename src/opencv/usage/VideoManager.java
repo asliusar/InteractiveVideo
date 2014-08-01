@@ -39,7 +39,7 @@ public class VideoManager extends Thread{
     public static  long MICRO_SECONDS_BETWEEN_FRAMES;
 
     public VideoManager(String inputFilename, String outputFilePrefix){
-    	setDaemon(true);
+    	//setDaemon(true);
     	
     	this.inputFilename = inputFilename;
     	this.outputFilePrefix = outputFilePrefix;
@@ -47,6 +47,7 @@ public class VideoManager extends Thread{
     	SECONDS_BETWEEN_FRAMES = 3/GetVideoFrames(inputFilename);
     	MICRO_SECONDS_BETWEEN_FRAMES = 
     	        (long)(Global.DEFAULT_PTS_PER_SECOND * SECONDS_BETWEEN_FRAMES);
+    	
     	mediaReader = ToolFactory.makeReader(inputFilename);
     	
     	GetVideoFrames(inputFilename);

@@ -1,6 +1,5 @@
 package opencv.usage;
 
-
 public class MainTread {
 	
 	public static void main(String argc[]) throws InterruptedException{
@@ -9,22 +8,21 @@ public class MainTread {
 				"/home/andrey/Videos/Snapshots/");
 		videoManager.start();
 		
-		
-		
 		// the end of video
 		while(videoManager.mediaReader.isOpen() == true){
-			videoManager.run();
+			//videoManager.run();
 			
-			FaceClassifier faceClassifier  = new FaceClassifier(videoManager.bufferedImage);
-				faceClassifier.start();
+			//FaceClassifier faceClassifier  = new FaceClassifier(videoManager.bufferedImage);
+			//faceClassifier.start();
 	
-			FaceComparator faceComparator = new FaceComparator(faceClassifier.getCropFaces());
+			//FaceComparator faceComparator = new FaceComparator(faceClassifier.getCropFaces());
+			//faceComparator.start();	
+			
+			//FaceLinker faceLinker = new FaceLinker(faceComparator.getActorsNames());
+			//faceLinker.start();
 				
-			FaceLinker faceLinker = new FaceLinker(faceComparator.getActorsNames());
-				
-			MarkupManager markupManager = new MarkupManager(faceClassifier.getRectFaces(),faceLinker.GetLinks(), 10);
-				markupManager.start();
-		}
-		
+			//MarkupManager markupManager = new MarkupManager(faceClassifier.getRectFaces(),faceLinker.GetLinks(), 10);
+			//	markupManager.start();
+		}	
 	}
 }
