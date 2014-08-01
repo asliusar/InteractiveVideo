@@ -22,7 +22,7 @@ public class VideoManager extends Thread{
 	
 	private static String inputFilename;
 	private static String outputFilePrefix;
-	public static BufferedImage bufferedImage;
+	public BufferedImage bufferedImage;
 	
 	
 	public IMediaReader mediaReader;
@@ -38,9 +38,8 @@ public class VideoManager extends Thread{
     
     public static  long MICRO_SECONDS_BETWEEN_FRAMES;
 
-    public VideoManager(String inputFilename, String outputFilePrefix){
-    	//setDaemon(true);
-    	
+    public VideoManager(String inputFilename, String outputFilePrefix){    	
+    	setDaemon(true);
     	this.inputFilename = inputFilename;
     	this.outputFilePrefix = outputFilePrefix;
     	
@@ -54,8 +53,6 @@ public class VideoManager extends Thread{
 
         // stipulate that we want BufferedImages created in BGR 24bit color space
         mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-      
-       
     }
     
     @Override

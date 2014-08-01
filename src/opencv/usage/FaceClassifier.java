@@ -32,7 +32,7 @@ import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
 
 public class FaceClassifier extends Thread{
 	//private static String imagename = "images.jpg";
-	private static String abs_path = "/home/sasha/workspace/FaceDetection/bin/"; // dynamically change
+	private static String abs_path = "/home/dima/workspace/InteractiveVideo/bin/"; // dynamically change
 	public int global_faces  = 0;
 	private List<Rect> rectFaces;
 	private List<BufferedImage> cropFaces;
@@ -42,9 +42,11 @@ public class FaceClassifier extends Thread{
 	public void run(){
 		try {
 			rectFaces = findFace(processingImg);
+			Thread.yield();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 				
 	}
@@ -63,8 +65,9 @@ public class FaceClassifier extends Thread{
 	}
 	public FaceClassifier(BufferedImage bufferedImage){
 		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        CascadeClassifier testClass = new CascadeClassifier(FaceClassifier.class.
-        		getResource("haarcascade_frontalface_alt.xml").getPath());
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        CascadeClassifier testClass = new CascadeClassifier("haarcascades/haarcascade_frontalface_alt.xml");
         processingImg = new Mat(bufferedImage.getHeight(),bufferedImage.getWidth(), CvType.CV_8UC3);
         processingImg.put(0, 0, pixels);
         
@@ -73,11 +76,9 @@ public class FaceClassifier extends Thread{
 	
 	public List<Rect> findFace(Mat image) throws IOException{
     	
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         System.out.println("\nRunning Main");
 
-        CascadeClassifier Main = new CascadeClassifier(
-        		FaceClassifier.class.getResource("haarcascades/haarcascade_frontalface_default.xml").getPath());
+        CascadeClassifier Main = new CascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
         MatOfRect eyeDetections = new MatOfRect(),faceDetections = new MatOfRect(),faceDetections2 = new MatOfRect();
         MatOfRect mouthDetections = new MatOfRect();
         faceDetections = findAllFaces(Main,image);
@@ -136,8 +137,7 @@ public class FaceClassifier extends Thread{
 
     private CascadeClassifier reloadXml(String name)
     {
-    	CascadeClassifier classifier =  new CascadeClassifier(FaceClassifier.class.
-    			getResource("haarcascades/"+name+".xml").getPath());
+    	CascadeClassifier classifier =  new CascadeClassifier("haarcascades/"+name+".xml");
     	return classifier;
     }
     
