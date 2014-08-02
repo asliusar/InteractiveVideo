@@ -33,9 +33,6 @@ public class FaceClassifier {
 	private static String abs_path = "/home/sasha/workspace/FaceDetection/bin/"; // dynamically change
 	public int global_faces  = 0;
 	
-	public static void main(String[] args)
-	{}
-	
     public MatOfRect findFace(String imagename) throws IOException{
     	
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
