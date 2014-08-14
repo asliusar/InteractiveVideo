@@ -5,17 +5,21 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
@@ -32,13 +36,24 @@ import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
 
 public class FaceClassifier extends Thread{
 	//private static String imagename = "images.jpg";
-	private static String abs_path = "/home/dima/workspace/InteractiveVideo/bin/"; // dynamically change
-	public int global_faces  = 0;
+	private static String abs_path = "/home/sasha/workspace/InteractiveVideo/bin/"; // dynamically change
+	public Integer global_faces  = 0;
 	private List<Rect> rectFaces;
 	private List<BufferedImage> cropFaces;
 	Mat processingImg;
 	BufferedImage processingImgBuf;
-	@Override
+	
+	public FaceClassifier(BufferedImage bufferedImage, Integer facenum)
+	{
+		global_faces = facenum;
+		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        CascadeClassifier testClass = new CascadeClassifier(
+        		"res/haarcascades/haarcascade_frontalface_default.xml");
+        reloadImg(bufferedImage);
+	}
+	
 	public void run(){
 		try {
 			rectFaces = findFace(processingImg);
@@ -61,35 +76,51 @@ public class FaceClassifier extends Thread{
 	}
 	
 	public FaceClassifier() {
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        CascadeClassifier testClass = new CascadeClassifier(
+        		"res/haarcascades/haarcascade_frontalface_default.xml");
 		System.out.println("lol");
 	}
+	
 	public FaceClassifier(BufferedImage bufferedImage){
 		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        CascadeClassifier testClass = new CascadeClassifier("haarcascades/haarcascade_frontalface_alt.xml");
-        processingImg = new Mat(bufferedImage.getHeight(),bufferedImage.getWidth(), CvType.CV_8UC3);
-        processingImg.put(0, 0, pixels);
-        
-        
+        CascadeClassifier testClass = new CascadeClassifier(
+        		"res/haarcascades/haarcascade_frontalface_default.xml");
+        reloadImg(bufferedImage);
 	}
 	
 	public List<Rect> findFace(Mat image) throws IOException{
     	
         System.out.println("\nRunning Main");
-
-        CascadeClassifier Main = new CascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
-        MatOfRect eyeDetections = new MatOfRect(),faceDetections = new MatOfRect(),faceDetections2 = new MatOfRect();
+//        Highgui.imwrite("anywhere.png",image);
+        
+        CascadeClassifier Main = new CascadeClassifier();
+        if(!Main.load("res/haarcascades/haarcascade_frontalface_default.xml"))
+        		System.out.println("bad");
+        
+        MatOfRect eyeDetections = new MatOfRect(),faceDetections = new MatOfRect();
         MatOfRect mouthDetections = new MatOfRect();
         faceDetections = findAllFaces(Main,image);
          
-        global_faces+=faceDetections.toArray().length;
+        //global_faces+=faceDetections.toArray().length;
+        
         int i = 0;
         
         cropFaces = new ArrayList<BufferedImage>();
+        
+        //processingImgBuf = mat2Img(image);
+        
         for(Rect r: faceDetections.toArray())
         {
+        	global_faces++;
+        	 
         	 BufferedImage croppedTemp = processingImgBuf.getSubimage(r.x,r.y,r.width,r.height);
+        	 ImageIO.write(croppedTemp, "jpg", new File("Snapshots/output"+global_faces+".jpg"));
+             
+        	 
         	 cropFaces.add(croppedTemp);
         }
         /*for(Rect r: faceDetections.toArray())
@@ -137,8 +168,18 @@ public class FaceClassifier extends Thread{
 
     private CascadeClassifier reloadXml(String name)
     {
-    	CascadeClassifier classifier =  new CascadeClassifier("haarcascades/"+name+".xml");
+    	CascadeClassifier classifier =  new CascadeClassifier();
+    	if(!classifier.load("res/haarcascades/"+name+".xml"))
+    		System.out.println("bad");
     	return classifier;
+    }
+    
+    public void reloadImg(BufferedImage bufferedImage)
+    {
+    	byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        processingImg = new Mat(bufferedImage.getHeight(),
+        		bufferedImage.getWidth(), CvType.CV_8UC3);
+        processingImgBuf = bufferedImage;
     }
     
     private void arrayToImg(ArrayList<ArrayList<Pixel>> mas,int width, int height) throws IOException {
@@ -218,4 +259,25 @@ public class FaceClassifier extends Thread{
         	 c = new MatOfRect();
          return c;
     }
+    
+    public BufferedImage mat2Img(Mat in)
+    {
+        MatOfByte bytemat = new MatOfByte();
+
+        Highgui.imencode(".jpg", in, bytemat);
+
+        byte[] bytes = bytemat.toArray();
+
+        InputStream inp = new ByteArrayInputStream(bytes);
+
+        BufferedImage out = new BufferedImage(1,1,1);
+		try {
+			out = ImageIO.read(inp);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return out;
+    } 
+    
 }
